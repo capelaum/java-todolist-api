@@ -1,6 +1,5 @@
 package br.com.capelaum.todolist.task;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,15 +29,7 @@ public class TaskController {
         var userId = request.getAttribute("userId");
         taskModel.setIdUser((UUID) userId);
 
-        var currentDate = LocalDateTime.now();
-
-        if (currentDate.isAfter(taskModel.getStartAt()) || currentDate.isAfter(taskModel.getEndAt())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("A data de início/término deve ser após a data atual");
-        }
-
-        if (taskModel.getStartAt().isAfter(taskModel.getEndAt())) {
+        if (!this.validateTaskStartAtWithEndAt(taskModel)) {
             return ResponseEntity
                     .badRequest()
                     .body("A data de início deve ser antes da data de término");
@@ -80,9 +71,23 @@ public class TaskController {
 
         Utils.copyNonNullProperties(taskModel, task);
 
+        if (!this.validateTaskStartAtWithEndAt(task)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("A data de início deve ser antes da data de término");
+        }
+
         var taskUpdated = this.taskRepository.save(task);
 
         return ResponseEntity.ok().body(taskUpdated);
+    }
+
+    public Boolean validateTaskStartAtWithEndAt(TaskModel taskModel) {
+        if (taskModel.getStartAt().isAfter(taskModel.getEndAt())) {
+            return false;
+        }
+
+        return true;
     }
 
 }

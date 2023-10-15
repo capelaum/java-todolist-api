@@ -31,4 +31,32 @@ public class TaskModel {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    public void setTitle(String title) throws Exception {
+        if (title.length() > 50) {
+            throw new Exception("O Título deve conter no máximo 50 caracteres");
+        }
+
+        this.title = title;
+    }
+
+    public void setStartAt(LocalDateTime startAt) throws Exception {
+        var currentDate = LocalDateTime.now();
+
+        if (currentDate.isAfter(startAt)) {
+            throw new Exception("A data de início deve ser após a data atual");
+        }
+
+        this.startAt = startAt;
+    }
+
+    public void setEndAt(LocalDateTime endAt) throws Exception {
+        var currentDate = LocalDateTime.now();
+
+        if (currentDate.isAfter(endAt)) {
+            throw new Exception("A data de término deve ser após a data atual");
+        }
+
+        this.endAt = endAt;
+    }
+
 }
