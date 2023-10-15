@@ -24,7 +24,7 @@ public class UserController {
         if (user != null) {
             return ResponseEntity
                     .badRequest()
-                    .body("Usuário já existe.");
+                    .body("Usuário já existe");
         }
 
         String passwordHashed = BCrypt.withDefaults()
